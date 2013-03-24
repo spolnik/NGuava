@@ -4,6 +4,10 @@ using NProgramming.NGuava.Utils;
 
 namespace NProgramming.NGuava.Base
 {
+    /// <summary>
+    /// Implementation of an <see cref="Optional{T}"/> not containing a reference
+    /// </summary>
+    /// <typeparam name="T">In comparison to java version, in C# we need to have generic class per type to fullfill compilator requiirements.</typeparam>
     internal sealed class Absent<T> : Optional<T> where T : class
     {
         internal static Absent<T> Instance = new Absent<T>();
