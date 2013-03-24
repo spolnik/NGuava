@@ -5,41 +5,41 @@ using System.Linq;
 namespace NProgramming.NGuava.Base
 {
     [Serializable]
-    public abstract class Optional<TClass>
+    public abstract class Optional<T> where T : class
     {
-        public static Optional<T> Absent<T>() where T : class
+        public static Optional<T> Absent()
         {
-            return Base.Absent<T>.Instance;
+            return Absent<T>.Instance;
         }
 
-        public static Optional<T> Of<T>(T reference) where T : class
+        public static Optional<T> Of(T reference)
         {
             return new Present<T>(Preconditions.CheckNotNull(reference));
         }
 
-        public static Optional<T> FromNullable<T>([Nullable] T nullableReference) where T : class
+        public static Optional<T> FromNullable([Nullable] T nullableReference)
         {
             return (nullableReference == null)
-                       ? Optional<T>.Absent<T>()
+                       ? Absent()
                        : new Present<T>(nullableReference);
         }
 
         public abstract bool IsPresent();
 
-        public abstract TClass Get();
+        public abstract T Get();
 
-        public abstract TClass Or(TClass defaultValue);
+        public abstract T Or(T defaultValue);
 
-        public abstract Optional<TClass> Or(Optional<TClass> secondChoice);
+        public abstract Optional<T> Or(Optional<T> secondChoice);
 
-        public abstract TClass Or(ISupplier<TClass> supplier);
+        public abstract T Or(ISupplier<T> supplier);
 
         [return: Nullable]
-        public abstract TClass OrNull();
+        public abstract T OrNull();
 
-        public abstract HashSet<TClass> AsSet();
+        public abstract ISet<T> AsSet();
 
-        public abstract Optional<TResult> Transform<TResult>(Func<TClass, TResult> function) where TResult : class;
+        public abstract Optional<TResult> Transform<TResult>(Func<T, TResult> function) where TResult : class;
 
         public abstract override bool Equals([Nullable] object @object);
 
@@ -47,7 +47,7 @@ namespace NProgramming.NGuava.Base
 
         public abstract override string ToString();
 
-        public static IEnumerable<T> PresentInstances<T>(IEnumerable<Optional<T>> optionals)
+        public static IEnumerable<T> PresentInstances(IEnumerable<Optional<T>> optionals)
         {
             Preconditions.CheckNotNull(optionals);
 

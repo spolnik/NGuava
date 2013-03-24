@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using NProgramming.NGuava.Utils;
 
 namespace NProgramming.NGuava.Base
 {
-    public sealed class Absent<T> : Optional<T> where T : class
+    internal sealed class Absent<T> : Optional<T> where T : class
     {
         internal static Absent<T> Instance = new Absent<T>();
 
@@ -40,15 +41,15 @@ namespace NProgramming.NGuava.Base
             return null;
         }
 
-        public override HashSet<T> AsSet()
+        public override ISet<T> AsSet()
         {
-            return new HashSet<T>();
+            return new ReadOnlySet<T>();
         }
 
         public override Optional<TResult> Transform<TResult>(Func<T, TResult> function)
         {
             Preconditions.CheckNotNull(function);
-            return Optional<TResult>.Absent<TResult>();
+            return Optional<TResult>.Absent();
         }
 
         public override string ToString()

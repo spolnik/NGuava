@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using NProgramming.NGuava.Utils;
 
 namespace NProgramming.NGuava.Base
 {
-    public sealed class Present<T> : Optional<T> where T : class
+    internal sealed class Present<T> : Optional<T> where T : class
     {
-        private readonly T reference;
+        private readonly T _reference;
 
         public Present(T reference)
         {
-            this.reference = reference;
+            _reference = reference;
         }
 
         public override bool IsPresent()
@@ -19,13 +21,13 @@ namespace NProgramming.NGuava.Base
 
         public override T Get()
         {
-            return reference;
+            return _reference;
         }
 
         public override T Or(T defaultValue)
         {
             Preconditions.CheckNotNull(defaultValue, "use Optional.OrNull() instead of Optional.Or(null)");
-            return reference;
+            return _reference;
         }
 
         public override Optional<T> Or(Optional<T> secondChoice)
@@ -37,35 +39,36 @@ namespace NProgramming.NGuava.Base
         public override T Or(ISupplier<T> supplier)
         {
             Preconditions.CheckNotNull(supplier);
-            return reference;
+            return _reference;
         }
 
         public override T OrNull()
         {
-            return reference;
+            return _reference;
         }
 
-        public override HashSet<T> AsSet()
+        public override ISet<T> AsSet()
         {
-            return new HashSet<T> {reference};
+            var hashSet = new HashSet<T> {_reference};
+            return new ReadOnlySet<T>(hashSet);
         }
 
         public override Optional<TResult> Transform<TResult>(Func<T, TResult> function)
         {
-            return new Present<TResult>(Preconditions.CheckNotNull(function(reference),
-                                                                   "the Function passed to Optional.Transform() must not return null."));
+            return new Present<TResult>(Preconditions.CheckNotNull(function(_reference),
+                                                                   "the Function passed to Optional<T>.Transform() must not return null."));
         }
 
         public override string ToString()
         {
-            return "Optional.Of(" + reference + ")";
+            return "Optional.Of(" + _reference + ")";
         }
 
         public override bool Equals([Nullable] object @object)
         {
             if (@object is Present<T>) {
                 var other = (Present<T>) @object;
-                return reference.Equals(other.reference);
+                return _reference.Equals(other._reference);
             }
 
             return false;
@@ -73,7 +76,7 @@ namespace NProgramming.NGuava.Base
 
         public override int GetHashCode()
         {
-            return 0x598df91c + reference.GetHashCode();
+            return 0x598df91c + _reference.GetHashCode();
         }
     }
 }
